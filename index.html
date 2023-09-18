@@ -12,7 +12,7 @@
       input[type="text"],
       input[type="number"],
       textarea {
-        width: 200px;
+        width: 400px;
       }
     </style>
   </head>
@@ -25,6 +25,7 @@
       <button type="button" onclick="setCurrentDateTime()">
         Set Current Date & Time</button
       ><br />
+
       Weight: <input type="number" id="weight" value="175" step="0.5" /><br />
       How was your sleep?
       <select id="sleep">
@@ -46,21 +47,52 @@
         placeholder="Describe your dream"
       ></textarea
       ><br />
-      Current Ailments:
-      <select id="ailments" onchange="toggleOtherAilment()">
-        <option value="left foot">Left Foot</option>
-        <option value="right foot">Right Foot</option>
-        <option value="lower back">Lower Back</option>
-        <option value="middle back">Middle Back</option>
-        <option value="other">Other</option></select
+      What's something(s) you learned yesterday?
+      <input type="text" id="learned" /><br />
+      What are you excited to explore today?
+      <input type="text" id="exploreToday" /><br />
+      2 things you are grateful for?
+      <input type="text" id="gratefulFor" /><br />
+
+      <br />
+
+      Left foot pain?
+      <input type="checkbox" id="leftFoot" />Yes
+      <select id="leftFootSeverity" class="hidden">
+        <option value="mild">Mild</option>
+        <option value="moderate">Moderate</option>
+        <option value="severe">Severe</option></select
       ><br />
+
+      Lower back pain?
+      <input type="checkbox" id="lowerBack" />Yes
+      <select id="lowerBackSeverity" class="hidden">
+        <option value="mild">Mild</option>
+        <option value="moderate">Moderate</option>
+        <option value="severe">Severe</option></select
+      ><br />
+
+      Other ailments?
+      <input
+        type="checkbox"
+        id="otherAilment"
+        onchange="toggleOtherAilmentDesc()"
+      />Yes
       <textarea
         id="otherAilmentDesc"
         class="hidden"
         placeholder="Describe the ailment"
       ></textarea
       ><br />
-      What do you want out of life? <input type="text" id="lifeGoal" /><br />
+      <br />
+      Whose got what you want out of life?
+      <input type="text" id="jealousGoalPerson" /><br />
+      What do they have that you don't?
+      <input type="text" id="jealousGoal" /><br />
+      <br />
+
+      What do YOU want out of life? <input type="text" id="lifeGoal" /><br />
+      <br />
       What do you NOT want out of life?
       <input type="text" id="notLifeGoal" /><br />
       What's the opposite of that? <input type="text" id="oppositeGoal" /><br />
@@ -70,25 +102,31 @@
         id="avoidNotLifeGoalAction"
         onchange="updateAssuranceAction()"
       /><br />
+      <br />
+
       Action plan for the year: <input type="text" id="yearPlan" /><br />
       Action plan for the next six months:
       <input type="text" id="sixMonthPlan" /><br />
       Action plan for the next six weeks:
       <input type="text" id="sixWeekPlan" /><br />
+      <br />
       Action plan for the next six days:
       <input type="text" id="sixDayPlan" /><br />
+      <br />
       Action plan for today: <input type="text" id="todayPlan" /><br />
       To assure <span id="actionTodayPlaceholder">that</span> happens today:
       <input type="text" id="avoidTodayIssue" /><br />
+      <br />
 
       <button type="button" onclick="generateSummary()">
-        Generate Summary
+        Generate Journal Entry
       </button>
     </form>
 
     <!-- Summary Section -->
-    <h2>Summary:</h2>
+
     <div id="summary"></div>
+    <br />
     <button onclick="copyToClipboard()">Copy to Clipboard</button>
 
     <script>
@@ -102,104 +140,161 @@
         }
       }
 
-      function toggleOtherAilment() {
-        const ailmentSelector = document.getElementById("ailments");
+      function toggleOtherAilmentDesc() {
+        const otherAilmentCheckbox = document.getElementById("otherAilment");
         const otherAilmentDesc = document.getElementById("otherAilmentDesc");
-        if (ailmentSelector.value === "other") {
+        if (otherAilmentCheckbox.checked) {
           otherAilmentDesc.classList.remove("hidden");
         } else {
           otherAilmentDesc.classList.add("hidden");
         }
       }
 
+      document
+        .getElementById("leftFoot")
+        .addEventListener("change", function () {
+          const leftFootSeverity = document.getElementById("leftFootSeverity");
+          if (this.checked) {
+            leftFootSeverity.classList.remove("hidden");
+          } else {
+            leftFootSeverity.classList.add("hidden");
+          }
+        });
+
+      document
+        .getElementById("lowerBack")
+        .addEventListener("change", function () {
+          const lowerBackSeverity =
+            document.getElementById("lowerBackSeverity");
+          if (this.checked) {
+            lowerBackSeverity.classList.remove("hidden");
+          } else {
+            lowerBackSeverity.classList.add("hidden");
+          }
+        });
+
       function setCurrentDateTime() {
         const now = new Date();
         const year = now.getFullYear();
         const month = (now.getMonth() + 1).toString().padStart(2, "0");
         const day = now.getDate().toString().padStart(2, "0");
-        const hours = now.getHours().toString().padStart(2, "0");
-        const minutes = now.getMinutes().toString().padStart(2, "0");
         document.getElementById("date").value = `${year}-${month}-${day}`;
-        document.getElementById("time").value = `${hours}:${minutes}`;
-      }
-
-      function convertToAmPm(time) {
-        let [hours, minutes] = time.split(":");
-        hours = parseInt(hours, 10);
-        const period = hours >= 12 ? "PM" : "AM";
-        hours = hours % 12 || 12; // Convert to 12-hour format
-        return `${hours}:${minutes} ${period}`;
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        document.getElementById("time").value = `${hours
+          .toString()
+          .padStart(2, "0")}:${minutes}`;
       }
 
       function updateAssuranceAction() {
-        const avoidNotLifeGoalAction = document.getElementById(
+        const actionTodayPlaceholder = document.getElementById(
+          "actionTodayPlaceholder"
+        );
+        actionTodayPlaceholder.textContent = document.getElementById(
           "avoidNotLifeGoalAction"
         ).value;
-        document.getElementById("actionTodayPlaceholder").textContent =
-          avoidNotLifeGoalAction;
       }
 
       function generateSummary() {
-        const date = new Date(document.getElementById("date").value);
-        const time = convertToAmPm(document.getElementById("time").value);
-        const weight = document.getElementById("weight").value;
-        const sleep = document.getElementById("sleep").value;
-        const dream = document.getElementById("dreams").value;
-        const dreamDesc =
-          dream === "yes" ? document.getElementById("dreamDesc").value : null;
+        const dateParts = document.getElementById("date").value.split("-");
+        const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+        const timeParts = document.getElementById("time").value.split(":");
+        let hours = parseInt(timeParts[0]);
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        const formattedTime = `${hours}:${timeParts[1]} ${ampm}`;
 
-        const formattedDate = `${date.toLocaleString("default", {
-          month: "long",
-        })} ${date.getDate()}, ${date.getFullYear()}`;
-        let narrative = `Journal Entry: <br>${formattedDate} at ${time}.<br>`;
-        narrative += `Weight: ${weight} lbs.<br>`;
-        narrative += `Last night's sleep was ${sleep}.<br>`;
-        if (dreamDesc) {
-          narrative += `You had a dream: ${dreamDesc}.<br><br>`;
-        } else {
-          narrative += "<br>";
+        let summary = `Journal for: ${formattedDate} ${formattedTime}<br><br>`;
+
+        summary += `Weight: ${
+          document.getElementById("weight").value
+        } lbs. <br>`;
+        summary += `Sleep: ${document.getElementById("sleep").value}<br>`;
+        if (document.getElementById("dreams").value === "yes") {
+          summary += `Dream: ${document.getElementById("dreamDesc").value}<br>`;
+        }
+        summary += `<br> I learned :  ${
+          document.getElementById("learned").value
+        }<br>`;
+        summary += `I'm excited about  ${
+          document.getElementById("exploreToday").value
+        }<br>`;
+        summary += `I'm enjoying  ${
+          document.getElementById("gratefulFor").value
+        }<br><br>`;
+
+        const ailments = [];
+        if (document.getElementById("leftFoot").checked) {
+          ailments.push(
+            `Left foot pain (${
+              document.getElementById("leftFootSeverity").value
+            })`
+          );
+        }
+        if (document.getElementById("lowerBack").checked) {
+          ailments.push(
+            `Lower back pain (${
+              document.getElementById("lowerBackSeverity").value
+            })`
+          );
+        }
+        if (document.getElementById("otherAilment").checked) {
+          ailments.push(document.getElementById("otherAilmentDesc").value);
+        }
+        if (ailments.length > 0) {
+          summary += `Ailments: ${ailments.join(", ")}<br><br>`;
         }
 
-        narrative += `Each day you're getting more and more ${
+        summary += `I'm becoming more known for ${
           document.getElementById("lifeGoal").value
-        } and ${document.getElementById("oppositeGoal").value} when you ${
+        },`;
+        summary += ` ${document.getElementById("jealousGoal").value}`;
+        summary += `and ${document.getElementById("oppositeGoal").value}<br>`;
+        summary += `So, i  ${
           document.getElementById("avoidNotLifeGoalAction").value
-        }.<br><br>`;
-        if (document.getElementById("yearPlan").value) {
-          narrative += `- This year: ${
+        }<br><br>`;
+
+        if (document.getElementById("yearPlan").value)
+          summary += `Year plan: ${
             document.getElementById("yearPlan").value
           }<br>`;
-        }
-        if (document.getElementById("sixMonthPlan").value) {
-          narrative += `- In the next six months: ${
+        if (document.getElementById("sixMonthPlan").value)
+          summary += `6-month plan: ${
             document.getElementById("sixMonthPlan").value
           }<br>`;
-        }
-        if (document.getElementById("sixWeekPlan").value) {
-          narrative += `- In the next six weeks: ${
+        if (document.getElementById("sixWeekPlan").value)
+          summary += `6-week plan: ${
             document.getElementById("sixWeekPlan").value
           }<br>`;
-        }
-        if (document.getElementById("sixDayPlan").value) {
-          narrative += `- In the next six days: ${
+        if (document.getElementById("sixDayPlan").value)
+          summary += `6-day plan: ${
             document.getElementById("sixDayPlan").value
-          }<br>`;
-        }
-        narrative += `<br>- Today: ${
+          }<br><br><br>`;
+
+        summary += `<br> Today I will  ${
           document.getElementById("todayPlan").value
-        }.<br>`;
-        document.getElementById("summary").innerHTML = narrative;
+        }<br>`;
+        summary += `as I  ${document.getElementById("avoidTodayIssue").value}`;
+
+        document.getElementById("summary").innerHTML = summary;
       }
 
       function copyToClipboard() {
-        const el = document.createElement("textarea");
-        el.value = document.getElementById("summary").innerText;
-        document.body.appendChild(el);
-        el.select();
+        const summaryText = document.getElementById("summary").textContent;
+        const tempTextArea = document.createElement("textarea");
+        document.body.appendChild(tempTextArea);
+        tempTextArea.value = summaryText;
+        tempTextArea.select();
         document.execCommand("copy");
-        document.body.removeChild(el);
-        alert("Summary copied to clipboard!");
+        document.body.removeChild(tempTextArea);
       }
+
+      // Automatically set current date & time when page loads
+      setCurrentDateTime();
     </script>
   </body>
 </html>
