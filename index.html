@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journal App</title>
+    <style>
+      .hidden {
+        display: none;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea {
+        width: 200px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Form Section -->
+    <form id="journalForm">
+      Date: <input type="date" id="date" /> Time:
+      <input type="time" id="time" />
+      <button type="button" onclick="setCurrentDateTime()">
+        Set Current Date & Time</button
+      ><br />
+      Weight: <input type="number" id="weight" value="175" step="0.5" /><br />
+      How was your sleep?
+      <select id="sleep">
+        <option value="good">Good</option>
+        <option value="decent">Decent</option>
+        <option value="ok">Ok</option>
+        <option value="bad">Bad</option>
+        <option value="insomnia">Insomnia</option>
+        <option value="bad insomnia">Bad Insomnia</option></select
+      ><br />
+      Any dreams?
+      <select id="dreams" onchange="toggleDreamDesc()">
+        <option value="no">No</option>
+        <option value="yes">Yes</option></select
+      ><br />
+      <textarea
+        id="dreamDesc"
+        class="hidden"
+        placeholder="Describe your dream"
+      ></textarea
+      ><br />
+      Current Ailments:
+      <select id="ailments" onchange="toggleOtherAilment()">
+        <option value="left foot">Left Foot</option>
+        <option value="right foot">Right Foot</option>
+        <option value="lower back">Lower Back</option>
+        <option value="middle back">Middle Back</option>
+        <option value="other">Other</option></select
+      ><br />
+      <textarea
+        id="otherAilmentDesc"
+        class="hidden"
+        placeholder="Describe the ailment"
+      ></textarea
+      ><br />
+      What do you want out of life? <input type="text" id="lifeGoal" /><br />
+      What do you NOT want out of life?
+      <input type="text" id="notLifeGoal" /><br />
+      What's the opposite of that? <input type="text" id="oppositeGoal" /><br />
+      What will you do to assure that happens?
+      <input
+        type="text"
+        id="avoidNotLifeGoalAction"
+        onchange="updateAssuranceAction()"
+      /><br />
+      Action plan for the year: <input type="text" id="yearPlan" /><br />
+      Action plan for the next six months:
+      <input type="text" id="sixMonthPlan" /><br />
+      Action plan for the next six weeks:
+      <input type="text" id="sixWeekPlan" /><br />
+      Action plan for the next six days:
+      <input type="text" id="sixDayPlan" /><br />
+      Action plan for today: <input type="text" id="todayPlan" /><br />
+      To assure <span id="actionTodayPlaceholder">that</span> happens today:
+      <input type="text" id="avoidTodayIssue" /><br />
+
+      <button type="button" onclick="generateSummary()">
+        Generate Summary
+      </button>
+    </form>
+
+    <!-- Summary Section -->
+    <h2>Summary:</h2>
+    <div id="summary"></div>
+    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+
+    <script>
+      function toggleDreamDesc() {
+        const dreamSelector = document.getElementById("dreams");
+        const dreamDesc = document.getElementById("dreamDesc");
+        if (dreamSelector.value === "yes") {
+          dreamDesc.classList.remove("hidden");
+        } else {
+          dreamDesc.classList.add("hidden");
+        }
+      }
+
+      function toggleOtherAilment() {
+        const ailmentSelector = document.getElementById("ailments");
+        const otherAilmentDesc = document.getElementById("otherAilmentDesc");
+        if (ailmentSelector.value === "other") {
+          otherAilmentDesc.classList.remove("hidden");
+        } else {
+          otherAilmentDesc.classList.add("hidden");
+        }
+      }
+
+      function setCurrentDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, "0");
+        const day = now.getDate().toString().padStart(2, "0");
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        document.getElementById("date").value = `${year}-${month}-${day}`;
+        document.getElementById("time").value = `${hours}:${minutes}`;
+      }
+
+      function convertToAmPm(time) {
+        let [hours, minutes] = time.split(":");
+        hours = parseInt(hours, 10);
+        const period = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert to 12-hour format
+        return `${hours}:${minutes} ${period}`;
+      }
+
+      function updateAssuranceAction() {
+        const avoidNotLifeGoalAction = document.getElementById(
+          "avoidNotLifeGoalAction"
+        ).value;
+        document.getElementById("actionTodayPlaceholder").textContent =
+          avoidNotLifeGoalAction;
+      }
+
+      function generateSummary() {
+        const date = new Date(document.getElementById("date").value);
+        const time = convertToAmPm(document.getElementById("time").value);
+        const weight = document.getElementById("weight").value;
+        const sleep = document.getElementById("sleep").value;
+        const dream = document.getElementById("dreams").value;
+        const dreamDesc =
+          dream === "yes" ? document.getElementById("dreamDesc").value : null;
+
+        const formattedDate = `${date.toLocaleString("default", {
+          month: "long",
+        })} ${date.getDate()}, ${date.getFullYear()}`;
+        let narrative = `Journal Entry: <br>${formattedDate} at ${time}.<br>`;
+        narrative += `Weight: ${weight} lbs.<br>`;
+        narrative += `Last night's sleep was ${sleep}.<br>`;
+        if (dreamDesc) {
+          narrative += `You had a dream: ${dreamDesc}.<br><br>`;
+        } else {
+          narrative += "<br>";
+        }
+
+        narrative += `Each day you're getting more and more ${
+          document.getElementById("lifeGoal").value
+        } and ${document.getElementById("oppositeGoal").value} when you ${
+          document.getElementById("avoidNotLifeGoalAction").value
+        }.<br><br>`;
+        if (document.getElementById("yearPlan").value) {
+          narrative += `- This year: ${
+            document.getElementById("yearPlan").value
+          }<br>`;
+        }
+        if (document.getElementById("sixMonthPlan").value) {
+          narrative += `- In the next six months: ${
+            document.getElementById("sixMonthPlan").value
+          }<br>`;
+        }
+        if (document.getElementById("sixWeekPlan").value) {
+          narrative += `- In the next six weeks: ${
+            document.getElementById("sixWeekPlan").value
+          }<br>`;
+        }
+        if (document.getElementById("sixDayPlan").value) {
+          narrative += `- In the next six days: ${
+            document.getElementById("sixDayPlan").value
+          }<br>`;
+        }
+        narrative += `<br>- Today: ${
+          document.getElementById("todayPlan").value
+        }.<br>`;
+        document.getElementById("summary").innerHTML = narrative;
+      }
+
+      function copyToClipboard() {
+        const el = document.createElement("textarea");
+        el.value = document.getElementById("summary").innerText;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        alert("Summary copied to clipboard!");
+      }
+    </script>
+  </body>
+</html>
