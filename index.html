@@ -208,24 +208,26 @@
         hours = hours ? hours : 12;
         const formattedTime = `${hours}:${timeParts[1]} ${ampm}`;
 
-        let summary = `Journal for: ${formattedDate} ${formattedTime}<br><br>`;
+        let summary = `Journal for: ${formattedDate} ${formattedTime}<br>\n<br>\n`;
 
         summary += `Weight: ${
           document.getElementById("weight").value
-        } lbs. <br>`;
-        summary += `Sleep: ${document.getElementById("sleep").value}<br>`;
+        } lbs. <br>\n`;
+        summary += `Sleep: ${document.getElementById("sleep").value}<br>\n`;
         if (document.getElementById("dreams").value === "yes") {
-          summary += `Dream: ${document.getElementById("dreamDesc").value}<br>`;
+          summary += `Dream: ${
+            document.getElementById("dreamDesc").value
+          }<br>\n`;
         }
-        summary += `<br> I learned :  ${
+        summary += `<br>\n I learned   ${
           document.getElementById("learned").value
-        }<br>`;
+        }<br>\n`;
         summary += `I'm excited about  ${
           document.getElementById("exploreToday").value
-        }<br>`;
+        }<br>\n`;
         summary += `I'm enjoying  ${
           document.getElementById("gratefulFor").value
-        }<br><br>`;
+        }<br>\n<br>\n`;
 
         const ailments = [];
         if (document.getElementById("leftFoot").checked) {
@@ -246,51 +248,61 @@
           ailments.push(document.getElementById("otherAilmentDesc").value);
         }
         if (ailments.length > 0) {
-          summary += `Ailments: ${ailments.join(", ")}<br><br>`;
+          summary += `my current Ailments are ${ailments.join(
+            ", "
+          )}<br>\n<br>\n`;
         }
 
         summary += `I'm becoming more known for ${
           document.getElementById("lifeGoal").value
         },`;
         summary += ` ${document.getElementById("jealousGoal").value}`;
-        summary += `and ${document.getElementById("oppositeGoal").value}<br>`;
+        summary += `and ${document.getElementById("oppositeGoal").value}<br>\n`;
         summary += `So, i  ${
           document.getElementById("avoidNotLifeGoalAction").value
-        }<br><br>`;
+        }<br>\n<br>\n`;
 
         if (document.getElementById("yearPlan").value)
           summary += `Year plan: ${
             document.getElementById("yearPlan").value
-          }<br>`;
+          }<br>\n`;
         if (document.getElementById("sixMonthPlan").value)
           summary += `6-month plan: ${
             document.getElementById("sixMonthPlan").value
-          }<br>`;
+          }<br>\n`;
         if (document.getElementById("sixWeekPlan").value)
           summary += `6-week plan: ${
             document.getElementById("sixWeekPlan").value
-          }<br>`;
+          }<br>\n`;
         if (document.getElementById("sixDayPlan").value)
           summary += `6-day plan: ${
             document.getElementById("sixDayPlan").value
-          }<br><br><br>`;
+          }<br>\n<br>\n<br>\n`;
 
-        summary += `<br> Today I will  ${
+        summary += `<br>\n Today I will  ${
           document.getElementById("todayPlan").value
-        }<br>`;
+        }<br>\n`;
         summary += `as I  ${document.getElementById("avoidTodayIssue").value}`;
 
         document.getElementById("summary").innerHTML = summary;
       }
 
+      function htmlToText(htmlContent) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = htmlContent;
+        return tempDiv.textContent.replace(/\n/g, "\n\n");
+      }
+
       function copyToClipboard() {
-        const summaryText = document.getElementById("summary").textContent;
-        const tempTextArea = document.createElement("textarea");
-        document.body.appendChild(tempTextArea);
-        tempTextArea.value = summaryText;
-        tempTextArea.select();
+        const summaryDiv = document.getElementById("summary");
+        const textVersion = htmlToText(summaryDiv.innerHTML);
+        const textarea = document.createElement("textarea");
+        textarea.textContent = textVersion;
+        document.body.appendChild(textarea);
+        textarea.select();
         document.execCommand("copy");
-        document.body.removeChild(tempTextArea);
+        document.body.removeChild(textarea);
+        alert("Copied to clipboard");
       }
 
       // Automatically set current date & time when page loads
