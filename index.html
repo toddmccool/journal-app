@@ -208,7 +208,7 @@
         hours = hours ? hours : 12;
         const formattedTime = `${hours}:${timeParts[1]} ${ampm}`;
 
-        let summary = `Journal for: ${formattedDate} ${formattedTime}<br>\n<br>\n`;
+        let summary = `Journal for: ${formattedDate} ${formattedTime}<br>\n`;
 
         summary += `Weight: ${
           document.getElementById("weight").value
@@ -248,9 +248,7 @@
           ailments.push(document.getElementById("otherAilmentDesc").value);
         }
         if (ailments.length > 0) {
-          summary += `my current Ailments are ${ailments.join(
-            ", "
-          )}<br>\n<br>\n`;
+          summary += `my current Ailments are ${ailments.join(", ")}<br>\n`;
         }
 
         summary += `I'm becoming more known for ${
@@ -260,7 +258,7 @@
         summary += `and ${document.getElementById("oppositeGoal").value}<br>\n`;
         summary += `So, i  ${
           document.getElementById("avoidNotLifeGoalAction").value
-        }<br>\n<br>\n`;
+        }<br>\n`;
 
         if (document.getElementById("yearPlan").value)
           summary += `Year plan: ${
@@ -277,9 +275,9 @@
         if (document.getElementById("sixDayPlan").value)
           summary += `6-day plan: ${
             document.getElementById("sixDayPlan").value
-          }<br>\n<br>\n<br>\n`;
+          }<br>\n<br>\n`;
 
-        summary += `<br>\n Today I will  ${
+        summary += `Today I will  ${
           document.getElementById("todayPlan").value
         }<br>\n`;
         summary += `as I  ${document.getElementById("avoidTodayIssue").value}`;
