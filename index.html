@@ -14,6 +14,9 @@
       textarea {
         width: 400px;
       }
+      .bold {
+        font-weight: bold;
+      }
     </style>
   </head>
 
@@ -27,8 +30,11 @@
       ><br />
 
       Weight: <input type="number" id="weight" value="175" step="0.5" /><br />
+
       How was your sleep?
       <select id="sleep">
+        <!-- options here -->
+
         <option value="good">Good</option>
         <option value="decent">Decent</option>
         <option value="ok">Ok</option>
@@ -39,8 +45,16 @@
       Any dreams?
       <select id="dreams" onchange="toggleDreamDesc()">
         <option value="no">No</option>
-        <option value="yes">Yes</option></select
-      ><br />
+        <option value="yes">Yes</option>
+      </select>
+      How many hours did you sleep?
+      <input
+        type="number"
+        id="sleepHours"
+        value="7"
+        min="0"
+        step="0.5"
+      /><br /><br />
       <textarea
         id="dreamDesc"
         class="hidden"
@@ -208,12 +222,17 @@
         hours = hours ? hours : 12;
         const formattedTime = `${hours}:${timeParts[1]} ${ampm}`;
 
-        let summary = `Journal for: ${formattedDate} ${formattedTime}<br>\n`;
+        let summary = `<strong>Journal for: ${formattedDate} ${formattedTime}</strong><br>\n`;
 
         summary += `Weight: ${
           document.getElementById("weight").value
         } lbs. <br>\n`;
+
         summary += `Sleep: ${document.getElementById("sleep").value}<br>\n`;
+        summary += `Sleep duration: ${
+          document.getElementById("sleepHours").value
+        } hours<br>\n<br>\n`;
+
         if (document.getElementById("dreams").value === "yes") {
           summary += `Dream: ${
             document.getElementById("dreamDesc").value
@@ -295,7 +314,15 @@
         const summaryDiv = document.getElementById("summary");
         const textVersion = htmlToText(summaryDiv.innerHTML);
         const textarea = document.createElement("textarea");
-        textarea.textContent = textVersion;
+
+        // Find the index of the end of the first line
+        const firstLineEnd = textVersion.indexOf("\n");
+        // Extract the first line and the rest of the text separately
+        const firstLine = textVersion.substring(0, firstLineEnd).trim();
+        const restText = textVersion.substring(firstLineEnd).trim();
+
+        // Add markdown bold formatting to the first line
+        textarea.textContent = `<strong>${firstLine}</strong>\n\n${restText}`;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand("copy");
