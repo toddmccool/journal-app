@@ -274,7 +274,9 @@
           document.getElementById("lifeGoal").value
         },`;
         summary += ` ${document.getElementById("jealousGoal").value}`;
-        summary += `and ${document.getElementById("oppositeGoal").value}<br>\n`;
+        summary += ` and ${
+          document.getElementById("oppositeGoal").value
+        }<br>\n`;
         summary += `So, i  ${
           document.getElementById("avoidNotLifeGoalAction").value
         }<br>\n`;
@@ -309,8 +311,25 @@
         tempDiv.innerHTML = htmlContent;
         return tempDiv.textContent.replace(/\n/g, "\n\n");
       }
+
       function copyToClipboard() {
         const summaryDiv = document.getElementById("summary");
+        const textVersion = htmlToText(summaryDiv.innerHTML);
+        const textarea = document.createElement("textarea");
+
+        // Find the index of the end of the first line
+        const firstLineEnd = textVersion.indexOf("\n");
+        // Extract the first line and the rest of the text separately
+        const firstLine = textVersion.substring(0, firstLineEnd).trim();
+        const restText = textVersion.substring(firstLineEnd).trim();
+
+        // Add markdown bold formatting to the first line
+        textarea.textContent = `<strong>${firstLine}</strong>\n\n${restText}`;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        alert("Copied to clipboard");
         const range = document.createRange();
         range.selectNode(summaryDiv);
         const selection = window.getSelection();
