@@ -215,7 +215,7 @@
 
       function generateSummary() {
         const dateParts = document.getElementById("date").value.split("-");
-        const formattedDate = `<b>${dateParts[1]}/${dateParts[2]}/${dateParts[0]}</b>`;
+        const formattedDate = `<strong>${dateParts[1]}/${dateParts[2]}/${dateParts[0]}</strong>`;
 
         const timeParts = document.getElementById("time").value.split(":");
         let hours = parseInt(timeParts[0]);
@@ -319,16 +319,13 @@
         const textVersion = htmlToText(summaryDiv.innerHTML);
         const textarea = document.createElement("textarea");
 
-        // Find the index of the end of the first line
         const firstLineEnd = textVersion.indexOf("\n");
-        // Extract the first line and the rest of the text separately
         const firstLine = textVersion.substring(0, firstLineEnd).trim();
         const restText = textVersion.substring(firstLineEnd).trim();
 
-        // Format the first line to be bold (wrapped in **)
         const formattedFirstLine = `**${firstLine}**`;
 
-        // Combine the formatted first line and the rest of the text
+        // This will still copy as plain text, with HTML tags visible
         const formattedText = `${formattedFirstLine}\n\n${restText}`;
 
         textarea.textContent = formattedText;
@@ -337,7 +334,6 @@
         document.execCommand("copy");
         document.body.removeChild(textarea);
 
-        // Custom alert box to confirm copying and redirect to the Google Doc
         if (confirm("Copied to clipboard. Click OK to go to the Google Doc.")) {
           window.location.href =
             "https://docs.google.com/document/d/1t3scUaamoUVePAFUhf-3TcneOlUXA3TKnnofHjS394c/edit?usp=sharing";
