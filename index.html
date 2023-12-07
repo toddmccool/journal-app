@@ -215,7 +215,8 @@
 
       function generateSummary() {
         const dateParts = document.getElementById("date").value.split("-");
-        const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+        const formattedDate = `<b>${dateParts[1]}/${dateParts[2]}/${dateParts[0]}</b>`;
+
         const timeParts = document.getElementById("time").value.split(":");
         let hours = parseInt(timeParts[0]);
         const ampm = hours >= 12 ? "PM" : "AM";
@@ -304,7 +305,7 @@
         }<br>\n`;
         summary += `as I  ${document.getElementById("avoidTodayIssue").value}`;
 
-        document.getElementById("summary").innerHTML = summary;
+        document.getElementById("summary").innerHTML = `<div>${summary}</div>`;
       }
 
       function htmlToText(htmlContent) {
@@ -324,26 +325,22 @@
         const firstLine = textVersion.substring(0, firstLineEnd).trim();
         const restText = textVersion.substring(firstLineEnd).trim();
 
-        // Add markdown bold formatting to the first line
-        textarea.textContent = `<strong>${firstLine}</strong>\n\n${restText}`;
+        // Format the first line to be bold (wrapped in **)
+        const formattedFirstLine = `**${firstLine}**`;
+
+        // Combine the formatted first line and the rest of the text
+        const formattedText = `${formattedFirstLine}\n\n${restText}`;
+
+        textarea.textContent = formattedText;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand("copy");
         document.body.removeChild(textarea);
-        alert("Copied to clipboard");
-        const range = document.createRange();
-        range.selectNode(summaryDiv);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
 
-        try {
-          document.execCommand("copy");
-          alert("Copied to clipboard");
-        } catch (err) {
-          console.error("Unable to copy to clipboard:", err);
-        } finally {
-          selection.removeAllRanges();
+        // Custom alert box to confirm copying and redirect to the Google Doc
+        if (confirm("Copied to clipboard. Click OK to go to the Google Doc.")) {
+          window.location.href =
+            "https://docs.google.com/document/d/1t3scUaamoUVePAFUhf-3TcneOlUXA3TKnnofHjS394c/edit?usp=sharing";
         }
       }
 
