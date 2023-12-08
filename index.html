@@ -230,15 +230,15 @@
           document.getElementById("weight").value
         } lbs. <br>\n`;
 
-        summary += `Sleep: ${document.getElementById("sleep").value}<br>\n`;
+        summary += `Sleep: ${document.getElementById("sleep").value}\n`;
         summary += `Sleep duration: ${
           document.getElementById("sleepHours").value
-        } hours<br>\n<br>\n`;
+        } hours<br>\n`;
 
         if (document.getElementById("dreams").value === "yes") {
-          summary += `Dream: ${
+          summary += `<br>Dream: ${
             document.getElementById("dreamDesc").value
-          }<br>\n`;
+          }\n`;
         }
         summary += `<br>\n I learned   ${
           document.getElementById("learned").value
@@ -323,7 +323,7 @@
         const firstLine = textVersion.substring(0, firstLineEnd).trim();
         const restText = textVersion.substring(firstLineEnd).trim();
 
-        const formattedFirstLine = `**${firstLine}**`;
+        const formattedFirstLine = `→→${firstLine}←←`;
 
         // This will still copy as plain text, with HTML tags visible
         const formattedText = `${formattedFirstLine}\n\n${restText}`;
