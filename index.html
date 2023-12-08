@@ -214,6 +214,7 @@
       }
 
       function generateSummary() {
+        document.getElementById("journalForm").style.display = "none";
         const dateParts = document.getElementById("date").value.split("-");
         const formattedDate = `<strong>${dateParts[1]}/${dateParts[2]}/${dateParts[0]}</strong>`;
 
@@ -224,7 +225,8 @@
         hours = hours ? hours : 12;
         const formattedTime = `${hours}:${timeParts[1]} ${ampm}`;
 
-        let summary = `<strong>Journal for: ${formattedDate} ${formattedTime}</strong><br>\n`;
+        let summary = `<strong>→→→Journal for: ${formattedDate} ${formattedTime}←←←
+</strong><br>\n`;
 
         summary += `Weight: ${
           document.getElementById("weight").value
@@ -315,6 +317,32 @@
       }
 
       function copyToClipboard() {
+        // Get the element containing the text you want to copy
+        const summaryDiv = document.getElementById("summary");
+
+        // Create a temporary textarea element to hold the text content
+        const el = document.createElement("textarea");
+        // Set the value of the textarea to the text content of summaryDiv
+        el.value = summaryDiv.innerText; // This will get the text without HTML tags
+
+        // Append the textarea to the document body
+        document.body.appendChild(el);
+        // Select the content of the textarea
+        el.select();
+        // Execute the copy command to copy the text to the clipboard
+        document.execCommand("copy");
+        // Remove the textarea from the document body
+        document.body.removeChild(el);
+
+        // Optional: A confirmation message or redirect after copying
+        if (confirm("Copied to clipboard. Click OK to go to the Google Doc.")) {
+          window.location.href =
+            "https://docs.google.com/document/d/1t3scUaamoUVePAFUhf-3TcneOlUXA3TKnnofHjS394c/edit?usp=sharing";
+        }
+      }
+
+      /*old copyToClipboard function inCase
+      function copyToClipboard() {
         const summaryDiv = document.getElementById("summary");
         const textVersion = htmlToText(summaryDiv.innerHTML);
         const textarea = document.createElement("textarea");
@@ -340,6 +368,7 @@
         }
       }
 
+      */
       // Automatically set current date & time when page loads
       setCurrentDateTime();
     </script>
