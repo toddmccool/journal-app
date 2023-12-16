@@ -139,10 +139,18 @@
     </form>
 
     <!-- Summary Section -->
-
     <div id="summary"></div>
     <br />
+
+    <!-- Button for Copying to Clipboard -->
     <button onclick="copyToClipboard()">Copy to Clipboard</button>
+
+    <!-- Hyperlink for Google Doc -->
+    <a
+      href="https://docs.google.com/document/d/1t3scUaamoUVePAFUhf-3TcneOlUXA3TKnnofHjS394c/edit?usp=sharing"
+      target="_blank"
+      >Open Google Doc</a
+    >
 
     <script>
       function toggleDreamDesc() {
@@ -317,58 +325,16 @@
       }
 
       function copyToClipboard() {
-        // Get the element containing the text you want to copy
         const summaryDiv = document.getElementById("summary");
-
-        // Create a temporary textarea element to hold the text content
         const el = document.createElement("textarea");
-        // Set the value of the textarea to the text content of summaryDiv
-        el.value = summaryDiv.innerText; // This will get the text without HTML tags
-
-        // Append the textarea to the document body
+        el.value = summaryDiv.innerText;
         document.body.appendChild(el);
-        // Select the content of the textarea
         el.select();
-        // Execute the copy command to copy the text to the clipboard
         document.execCommand("copy");
-        // Remove the textarea from the document body
         document.body.removeChild(el);
-
-        // Optional: A confirmation message or redirect after copying
-        if (confirm("Copied to clipboard. Click OK to go to the Google Doc.")) {
-          window.location.href =
-            "https://docs.google.com/document/d/1t3scUaamoUVePAFUhf-3TcneOlUXA3TKnnofHjS394c/edit?usp=sharing";
-        }
+        alert("Copied to clipboard.");
       }
 
-      /*old copyToClipboard function inCase
-      function copyToClipboard() {
-        const summaryDiv = document.getElementById("summary");
-        const textVersion = htmlToText(summaryDiv.innerHTML);
-        const textarea = document.createElement("textarea");
-
-        const firstLineEnd = textVersion.indexOf("\n");
-        const firstLine = textVersion.substring(0, firstLineEnd).trim();
-        const restText = textVersion.substring(firstLineEnd).trim();
-
-        const formattedFirstLine = `→→${firstLine}←←`;
-
-        // This will still copy as plain text, with HTML tags visible
-        const formattedText = `${formattedFirstLine}\n\n${restText}`;
-
-        textarea.textContent = formattedText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-
-        if (confirm("Copied to clipboard. Click OK to go to the Google Doc.")) {
-          window.location.href =
-            "https://docs.google.com/document/d/1t3scUaamoUVePAFUhf-3TcneOlUXA3TKnnofHjS394c/edit?usp=sharing";
-        }
-      }
-
-      */
       // Automatically set current date & time when page loads
       setCurrentDateTime();
     </script>
