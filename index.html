@@ -128,10 +128,13 @@
       Action plan for the next six days:
       <input type="text" id="sixDayPlan" /><br />
       <br />
-      Action plan for today: <input type="text" id="todayPlan" /><br />
-      To assure <span id="actionTodayPlaceholder">that</span> happens today/and
-      other thougts/stream of consciousness:
-      <input type="text" id="avoidTodayIssue" /><br />
+
+      Action plan for today:
+      <textarea id="todayPlan" rows="4" cols="50"></textarea><br />
+
+      how will you assure <span id="actionTodayPlaceholder">that</span> happens
+      today/and other thoughts/stream of consciousness:
+      <textarea id="avoidTodayIssue" rows="5" cols="80"></textarea><br />
       <br />
 
       <button type="button" onclick="generateSummary()">
