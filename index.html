@@ -31,6 +31,17 @@
 
       Weight: <input type="number" id="weight" value="175" step="0.5" /><br />
 
+      Location:
+      <input
+        type="radio"
+        id="shermanOaks"
+        name="location"
+        value="Sherman Oaks"
+      />
+      <label for="shermanOaks">Sherman Oaks</label>
+      <input type="radio" id="fullerton" name="location" value="Fullerton" />
+      <label for="fullerton">Fullerton</label><br />
+
       How was your sleep?
       <select id="sleep">
         <!-- options here -->
@@ -240,9 +251,19 @@
         let summary = `<strong>→→→Journal for: ${formattedDate} ${formattedTime}←←←
 </strong><br>\n`;
 
-        summary += `Weight: ${
-          document.getElementById("weight").value
-        } lbs. <br>\n`;
+        summary += `Weight: ${document.getElementById("weight").value} lbs. `;
+
+        const locationRadios = document.getElementsByName("location");
+        let selectedLocation = "";
+        for (const radio of locationRadios) {
+          if (radio.checked) {
+            selectedLocation = radio.value;
+            break;
+          }
+        }
+
+        // Include the location in the summary
+        summary += `Location: ${selectedLocation}. <br>\n`;
 
         summary += `Sleep: ${document.getElementById("sleep").value}\n`;
         summary += `-- Duration: ${
