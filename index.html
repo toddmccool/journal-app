@@ -86,8 +86,22 @@
       <select id="leftFootSeverity" class="hidden">
         <option value="mild">Mild</option>
         <option value="moderate">Moderate</option>
-        <option value="severe">Severe</option></select
-      ><br />
+        <option value="severe">Severe</option>
+      </select>
+      <!-- Removed <br /> here -->
+      --> Shoes worn yesterday:
+      <select id="shoesWorn" onchange="toggleOtherShoes()">
+        <option value="xero workout">Xero Workout</option>
+        <option value="xero mountain">Xero Mountain</option>
+        <option value="puma">Puma</option>
+        <option value="other">Other</option>
+      </select>
+      <input
+        type="text"
+        id="otherShoes"
+        class="hidden"
+        placeholder="Specify other shoes"
+      /><br /><br />
 
       Lower back pain?
       <input type="checkbox" id="lowerBack" />Yes
@@ -199,6 +213,16 @@
           }
         });
 
+      function toggleOtherShoes() {
+        const shoesSelector = document.getElementById("shoesWorn");
+        const otherShoesInput = document.getElementById("otherShoes");
+        if (shoesSelector.value === "other") {
+          otherShoesInput.classList.remove("hidden");
+        } else {
+          otherShoesInput.classList.add("hidden");
+        }
+      }
+
       document
         .getElementById("lowerBack")
         .addEventListener("change", function () {
@@ -285,14 +309,35 @@
           document.getElementById("gratefulFor").value
         }<br>\n<br>\n`;
 
+        // ... existing code ...
+
+        // ... existing code ...
+
+        // Initialize the ailments list
         const ailments = [];
+
+        // Combine foot pain and shoes worn on the same line if foot pain is checked
         if (document.getElementById("leftFoot").checked) {
-          ailments.push(
-            `Left foot pain (${
-              document.getElementById("leftFootSeverity").value
-            })`
-          );
+          const footPain = `Left foot pain (${
+            document.getElementById("leftFootSeverity").value
+          })`;
+          const shoesWorn = document.getElementById("shoesWorn").value;
+          let shoesSummary = `Shoes worn yesterday: ${shoesWorn}`;
+          if (shoesWorn === "other") {
+            shoesSummary += ` (${document.getElementById("otherShoes").value})`;
+          }
+          ailments.push(`${footPain} - ${shoesSummary}`);
+        } else {
+          // Add shoes summary alone if foot pain is not checked
+          const shoesWorn = document.getElementById("shoesWorn").value;
+          let shoesSummary = `Shoes worn yesterday: ${shoesWorn}`;
+          if (shoesWorn === "other") {
+            shoesSummary += ` (${document.getElementById("otherShoes").value})`;
+          }
+          ailments.push(shoesSummary);
         }
+
+        // Add lower back pain and other ailments
         if (document.getElementById("lowerBack").checked) {
           ailments.push(
             `Lower back pain (${
@@ -303,9 +348,17 @@
         if (document.getElementById("otherAilment").checked) {
           ailments.push(document.getElementById("otherAilmentDesc").value);
         }
+
+        // If there are any ailments, add the header and list them
         if (ailments.length > 0) {
-          summary += `my current Ailments are ${ailments.join(", ")}<br>\n`;
+          summary += `my current Ailments are <br>\n${ailments.join(
+            "<br>\n"
+          )}<br>\n<br>\n`;
         }
+
+        // ... existing code ...
+
+        // ... existing code ...
 
         summary += `I'm becoming more known for ${
           document.getElementById("lifeGoal").value
