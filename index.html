@@ -79,7 +79,8 @@
       2 things you are grateful for?
       <input type="text" id="gratefulFor" /><br />
 
-      <br />
+      What is this week's (or today's) dilemma?
+      <input type="text" id="dilemma" /><br />
 
       Left foot pain?
       <input type="checkbox" id="leftFoot" />Yes
@@ -93,6 +94,7 @@
       <select id="shoesWorn" onchange="toggleOtherShoes()">
         <option value="xero workout">Xero Workout</option>
         <option value="xero mountain">Xero Mountain</option>
+        <option value="xero DRESS">Xero DRESS</option>
         <option value="puma">Puma</option>
         <option value="other">Other</option>
       </select>
@@ -307,7 +309,12 @@
         }<br>\n`;
         summary += `I'm enjoying  ${
           document.getElementById("gratefulFor").value
-        }<br>\n<br>\n`;
+        }<br>\n`;
+
+        // New code to add the dilemma response
+        summary += `I'm working on overcoming ${
+          document.getElementById("dilemma").value
+        }<br>\n`;
 
         // ... existing code ...
 
