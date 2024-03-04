@@ -79,8 +79,11 @@
       2 things you are grateful for?
       <input type="text" id="gratefulFor" /><br />
 
-      What is this week's (or today's) dilemma?
-      <input type="text" id="dilemma" /><br />
+      What is this week's (or today's) dilema?
+      <input type="text" id="dilema" /><br />
+
+      How is this dilema hypothetically a good thing?
+      <input type="text" id="dilemaGood" /><br />
 
       Left foot pain?
       <input type="checkbox" id="leftFoot" />Yes
@@ -138,6 +141,8 @@
       What do you NOT want out of life?
       <input type="text" id="notLifeGoal" /><br />
       What's the opposite of that? <input type="text" id="oppositeGoal" /><br />
+      What's the hypothetical downside of that?
+      <input type="text" id="oppositeGoalDownSide" /><br />
       What will you do to assure that happens?
       <input
         type="text"
@@ -311,11 +316,14 @@
           document.getElementById("gratefulFor").value
         }<br>\n`;
 
-        // New code to add the dilemma response
+        // New code to add the dilema response
         summary += `I'm working on overcoming ${
-          document.getElementById("dilemma").value
+          document.getElementById("dilema").value
         }<br>\n`;
 
+        summary += `I'm finding a new way to ${
+          document.getElementById("dilemaGood").value
+        }<br>\n`;
         // ... existing code ...
 
         // ... existing code ...
@@ -373,6 +381,9 @@
         summary += ` ${document.getElementById("jealousGoal").value}`;
         summary += ` and ${
           document.getElementById("oppositeGoal").value
+        }<br>\n`;
+        summary += ` and avoiding ${
+          document.getElementById("oppositeGoalDownSide").value
         }<br>\n`;
         summary += `So, i  ${
           document.getElementById("avoidNotLifeGoalAction").value
